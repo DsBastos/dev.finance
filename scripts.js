@@ -1,111 +1,217 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dev.finance$</title>
+  
+const Modal = {
+  open(){
+      // Abrir modal
+      // Adicionar a class active ao modal
+      document
+          .querySelector('.modal-overlay')
+          .classList
+          .add('active')
 
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,700;1,100;1,400;1,700&display=swap" rel="stylesheet"
-    />
-  </head>
+  },
+  close(){
+      // fechar o modal
+      // remover a class active do modal
+      document
+          .querySelector('.modal-overlay')
+          .classList
+          .remove('active')
+  }
+}
 
-  <body>
-    <header>
-      <img src="./assets/logo.svg" alt="Logo Dev Finance">
-    </header>
+const Storage = {
+  get() {
+      return JSON.parse(localStorage.getItem("dev.finances:transactions")) || []
+  },
 
-    <main class="container">
-      <section id="balance">
-        <h2 class="sr-only">Balanço</h2>
+  set(transactions) {
+      localStorage.setItem("dev.finances:transactions", JSON.stringify(transactions))
+  }
+}
 
-        <div class="card">
-          <h3>
-            <span>
-              Entradas
-            </span>
-            <img src="./assets/income.svg" alt="Imagem de entradas">
-          </h3>
-          <p id="incomeDisplay">R$ 5.000,00</p>
-        </div>
+const Transaction = {
+  all: Storage.get(),
 
-        <div class="card">
-          <h3>
-            <span>
-              Saídas
-            </span>
-            <img src="./assets/expense.svg" alt="Imagem de Saídas">
-          </h3>
-          <p id="expenseDisplay">R$ 2.000,00</p>
-        </div>
+  add(transaction){
+      Transaction.all.push(transaction)
 
-        <div class="card total">
-          <h3>
-            <span>
-              Total
-            </span>
-            <img src="./assets/total.svg" alt="Imagem de Total">
-          </h3>
-          <p id="totalDisplay">R$ 3.000,00</p>
-        </div>
+      App.reload()
+  },
 
-      </section>
+  remove(index) {
+      Transaction.all.splice(index, 1)
 
-      <section id="transaction">
-        <h2 class="sr-only">Transações</h2>
+      App.reload()
+  },
 
-        <a href="#" onclick="Modal.open()" class="button new">+ Nova Transação</a>
+  incomes() {
+      let income = 0;
+      Transaction.all.forEach(transaction => {
+          if( transaction.amount > 0 ) {
+              income += transaction.amount;
+          }
+      })
+      return income;
+  },
 
-        <table id="data-table">
-          <thead>
-            <tr>
-              <th>Descrição</th>
-              <th>Valor</th>
-              <th>Data</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </section>
-    </main>
+  expenses() {
+      let expense = 0;
+      Transaction.all.forEach(transaction => {
+          if( transaction.amount < 0 ) {
+              expense += transaction.amount;
+          }
+      })
+      return expense;
+  },
 
-    <div class="modal-overlay">
-      <div class="modal">
-        <div id="form">
-          <h2>Nova Transação</h2>
-          <form action="" onsubmit="Form.submit(event)">
-            <div class="input-group">
-              <label class="sr-only" for="description">Descrição</label>
-              <input type="text" id="description" name="description" placeholder="Descrição" />
-            </div>
+  total() {
+      return Transaction.incomes() + Transaction.expenses();
+  }
+}
 
-            <div class="input-group">
-              <label class="sr-only" for="amount">Valor</label>
-              <input type="number" step="0.01" id="amount" name="amount" placeholder="0,00" />
-              <small class="help">Use o sinal - (negativo) para despesas e , (vírgula) para casas decimais</small>
-            </div>
+const DOM = {
+  transactionsContainer: document.querySelector('#data-table tbody'),
 
-            <div class="input-group">
-              <label class="sr-only" for="date">Data</label>
-              <input type="date" id="date" name="date" />
-            </div>
+  addTransaction(transaction, index) {
+      const tr = document.createElement('tr')
+      tr.innerHTML = DOM.innerHTMLTransaction(transaction, index)
+      tr.dataset.index = index
 
-            <div class="input-group actions">
-              <a onclick="Modal.close()" href="#" class="button cancel">Cancelar</a>
-              <button>Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      DOM.transactionsContainer.appendChild(tr)
+  },
 
-    <footer>
-      <p>dev.finance$</p>
-    </footer>
+  innerHTMLTransaction(transaction, index) {
+      const CSSclass = transaction.amount > 0 ? "income" : "expense"
 
-    <script src="./scripts.js"></script>
-  </body>
-</html>
+      const amount = Utils.formatCurrency(transaction.amount)
+
+      const html = `
+      <td class="description">${transaction.description}</td>
+      <td class="${CSSclass}">${amount}</td>
+      <td class="date">${transaction.date}</td>
+      <td>
+          <img onclick="Transaction.remove(${index})" src="./assets/minus.svg" alt="Remover transação">
+      </td>
+      `
+
+      return html
+  },
+
+  updateBalance() {
+      document
+          .getElementById('incomeDisplay')
+          .innerHTML = Utils.formatCurrency(Transaction.incomes())
+      document
+          .getElementById('expenseDisplay')
+          .innerHTML = Utils.formatCurrency(Transaction.expenses())
+      document
+          .getElementById('totalDisplay')
+          .innerHTML = Utils.formatCurrency(Transaction.total())
+  },
+
+  clearTransactions() {
+      DOM.transactionsContainer.innerHTML = ""
+  }
+}
+
+const Utils = {
+  formatAmount(value){
+      value = Number(value.replace(/\,\./g, "")) * 100
+      
+      return value
+  },
+
+  formatDate(date) {
+      const splittedDate = date.split("-")
+      return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
+  },
+
+  formatCurrency(value) {
+      const signal = Number(value) < 0 ? "-" : ""
+
+      value = String(value).replace(/\D/g, "")
+
+      value = Number(value) / 100
+
+      value = value.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+      })
+
+     return signal + value
+  }
+}
+
+const Form = {
+  description: document.querySelector('input#description'),
+  amount: document.querySelector('input#amount'),
+  date: document.querySelector('input#date'),
+
+  getValues() {
+      return {
+          description: Form.description.value,
+          amount: Form.amount.value,
+          date: Form.date.value
+      }
+  },
+
+  validateFields() {
+      const { description, amount, date } = Form.getValues()
+      
+      if( description.trim() === "" || 
+          amount.trim() === "" || 
+          date.trim() === "" ) {
+              throw new Error("Por favor, preencha todos os campos")
+      }
+  },
+
+  formatValues() {
+      let { description, amount, date } = Form.getValues()
+      
+      amount = Utils.formatAmount(amount)
+
+      date = Utils.formatDate(date)
+
+      return {
+          description,
+          amount,
+          date
+      }
+  },
+
+  clearFields() {
+      Form.description.value = ""
+      Form.amount.value = ""
+      Form.date.value = ""
+  },
+
+  submit(event) {
+      event.preventDefault()
+
+      try {
+          Form.validateFields()
+          const transaction = Form.formatValues()
+          Transaction.add(transaction)
+          Form.clearFields()
+          Modal.close()
+      } catch (error) {
+          alert(error.message)
+      }
+  }
+}
+
+const App = {
+  init() {
+      Transaction.all.forEach(DOM.addTransaction)
+      
+      DOM.updateBalance()
+
+      Storage.set(Transaction.all)
+  },
+  reload() {
+      DOM.clearTransactions()
+      App.init()
+  },
+}
+
+App.init()
