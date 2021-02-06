@@ -175,13 +175,49 @@ const Form = {
   },
 
   validateFields() {
-    console.log(Form.getValues())
+      const { description, amount, type, date } = Form.getValues()
+      
+      if( description.trim() === "" || 
+          amount.trim() === "" ||
+          type.trim() === "" ||
+          date.trim() === "" ) {
+              throw new Error("Por favor, preencha todos os campos")
+      }
+  },
+
+  formatValues() {
+      let { description, amount, type, date } = Form.getValues()
+      
+      amount = Utils.formatAmount(amount)
+
+      date = Utils.formatDate(date)
+
+      return {
+          description,
+          amount,
+          type,
+          date
+      }
+  },
+
+  clearFields() {
+      Form.description.value = ""
+      Form.amount.value = ""
+      Form.date.value = ""
   },
 
   submit(event) {
-    event.preventDefault()
-    Form.validateFields()
-    //Form.formatData()
+      event.preventDefault()
+
+      try {
+          Form.validateFields()
+          const transaction = Form.formatValues()
+          Transaction.add(transaction)
+          Form.clearFields()
+          Modal.close()
+      } catch (error) {
+          alert(error.message)
+      }
   }
 }
 
