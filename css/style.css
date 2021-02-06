@@ -240,12 +240,13 @@ td.expense {
     padding: 2.4rem;  
     position: relative;
     z-index: 1;
-
+    width: 90%;
     padding: 1.5rem 2rem;
     border-radius: 0.938rem;
     margin-bottom: 2rem;
     color: var(--dark-blue);
     box-shadow: 0 2px 8px 0 rgba(5, 34, 97, 0.1);
+    max-width: 500px;
 }
 
 
@@ -258,14 +259,14 @@ td.expense {
     margin-top: 0;
 }
 
-input {
+input, select {
     border: none;
     border-radius: 0.2rem;
     padding: 0.8rem;
     width: 100%;
 }
 
-.input-group {
+.input-group, select {
     margin-top: 0.8rem;
 }
 

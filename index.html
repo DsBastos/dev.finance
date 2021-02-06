@@ -62,6 +62,7 @@
               <tr>
                 <th>Descrição</th>
                 <th>Valor</th>
+                <th>Tipo</th>
                 <th>Data</th>
                 <th></th>
               </tr>
@@ -89,6 +90,19 @@
               <small class="help">Use o sinal - (negativo) para despesas e , (vírgula) para casas decimais</small>
             </div>
 
+            <div class="input-group">         
+              <label class="sr-only" for="type">Tipo</label>
+     
+              <select name="type" id="type">
+                <option value="" disabled selected>Tipo</option>
+                  <option value="casa" ><i data-feather="home">casa</i></option>
+                  <option value="trabalho">Trabalho</option>
+                  <option value="alimentacao">Alimentação</option>
+                  <option value="lazer">Lazer</option>
+                  <option value="extra">Atividade extra</option>
+              </select>
+          </div>
+
             <div class="input-group">
               <label class="sr-only" for="date">Data</label>
               <input type="date" id="date" name="date" />
@@ -106,7 +120,12 @@
     <footer>
       <p>dev.finance$</p>
     </footer>
+    <script src="https://unpkg.com/feather-icons"></script>
 
     <script src="./scripts.js"></script>
+
+    <script>
+      feather.replace()
+    </script>
   </body>
 </html>

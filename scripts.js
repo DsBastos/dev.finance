@@ -88,6 +88,7 @@ const DOM = {
       const html = `
       <td class="description">${transaction.description}</td>
       <td class="${CSSclass}">${amount}</td>
+      <td class="type">${Form.getType()}</td>
       <td class="date">${transaction.date}</td>
       <td>
           <img onclick="Transaction.remove(${index})" src="./assets/minus.svg" alt="Remover transação">
@@ -116,9 +117,8 @@ const DOM = {
 
 const Utils = {
   formatAmount(value){
-      value = Number(value.replace(/\,\./g, "")) * 100
-      
-      return value
+      value = value * 100
+      return Math.round(value)
   },
 
   formatDate(date) {
@@ -145,58 +145,43 @@ const Utils = {
 const Form = {
   description: document.querySelector('input#description'),
   amount: document.querySelector('input#amount'),
+  type: document.querySelector('select#type'),
   date: document.querySelector('input#date'),
+
+  getType(){
+    switch (Form.type.value) {
+        case 'casa':
+            return 'home'
+        case 'trabalho':
+            return 'laptop'
+        case 'alimentacao':
+            return 'local_pizza'
+        case 'lazer':
+            return 'beach_access'
+        case 'extra':
+            return 'local_offer'
+        default: 
+            return 'laptop'
+    }
+},
 
   getValues() {
       return {
           description: Form.description.value,
           amount: Form.amount.value,
+          type: Form.getType(),
           date: Form.date.value
       }
   },
 
   validateFields() {
-      const { description, amount, date } = Form.getValues()
-      
-      if( description.trim() === "" || 
-          amount.trim() === "" || 
-          date.trim() === "" ) {
-              throw new Error("Por favor, preencha todos os campos")
-      }
-  },
-
-  formatValues() {
-      let { description, amount, date } = Form.getValues()
-      
-      amount = Utils.formatAmount(amount)
-
-      date = Utils.formatDate(date)
-
-      return {
-          description,
-          amount,
-          date
-      }
-  },
-
-  clearFields() {
-      Form.description.value = ""
-      Form.amount.value = ""
-      Form.date.value = ""
+    console.log(Form.getValues())
   },
 
   submit(event) {
-      event.preventDefault()
-
-      try {
-          Form.validateFields()
-          const transaction = Form.formatValues()
-          Transaction.add(transaction)
-          Form.clearFields()
-          Modal.close()
-      } catch (error) {
-          alert(error.message)
-      }
+    event.preventDefault()
+    Form.validateFields()
+    //Form.formatData()
   }
 }
 
