@@ -4,6 +4,21 @@
     --green: #83b4b3;
     --light-green: #3dd705;
     --red: #e92929;
+    --bg: #f7f5fa;
+
+    --my-green: #02e402; /***/ 
+    --lt-green: #3dd705; /***/
+    --dark-green: #49aa26; /***/
+    --header: #097392;
+    --income: #12a454; /***/
+    --my-red: #e92929; /***/
+    --full-red: #F00; /***/
+    --my-grey: #d2dcdf;
+    --my-white:#f0f2f5; /***/
+    --full-white: #fff; /***/
+    --full-black: #000;/***/
+    --my-black: rgba(0,0,0,.5); /***/
+    --dark-blue: #363f5f; /***/
 }
 
 * {
@@ -17,7 +32,7 @@ html {
 }
 
 body {
-    background-color: #f7f5fa;
+    background-color: var(--bg);
     font-family: 'Poppins', sans-serif;
 }
 
@@ -95,7 +110,7 @@ button:hover {
 
 /* Header ==========================*/
 header {
-    background-color: #097392;
+    background-color: var(--header);
     padding: 2rem 0 10rem;
     text-align: center;
 }
@@ -105,7 +120,31 @@ header {
     font-weight: 100;
 }
 
-
+.toogle {
+    padding: 1px;
+    margin: 0;
+  
+    height: 40px;
+    width: 40px;
+    
+    position: absolute;
+    top: 1.5%;
+    left: 1.5%;
+  
+    fill: var(--full-white);
+  }
+  
+  .sun {
+    opacity: 1;
+  }
+  
+  .moon {
+    opacity: 0;
+  }
+  
+  .rocket {
+    opacity: 0;
+  }
 /* Balance ==========================*/
 #balance {
     margin-top: -8rem;
@@ -285,7 +324,47 @@ input, select {
     width: 48%;
 }
 
+input.theme[type=checkbox]{
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
 
+label.theme {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 52px;
+    height: 27px;
+    background: grey;
+    float: right;
+    border-radius: 100px;
+    position: relative;
+}
+
+label.theme::after{
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+input.theme:checked + label.theme {
+    background-color: var(--color-headings);
+}
+
+input.theme:checked + label.theme::after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+}
+
+label.theme:active:after {
+    width: 45px;
+}
 /* Footer ==========================*/
 footer {
     text-align: center;
@@ -295,10 +374,13 @@ footer {
 }
 
 
+
+
+
 /* Responsive ==========================*/
 @media (min-width: 768px) {
     html {
-        font-size: 87.5%;
+        font-size: 89.5%;
     }
 
     #balance {
