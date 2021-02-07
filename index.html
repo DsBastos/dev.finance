@@ -13,7 +13,12 @@
 
   <body>
     <header>
-      <img src="./assets/logo.svg" alt="Logo Dev Finance">
+      <div class="container">
+        <img src="./assets/logo.svg" alt="Logo Dev Finance">
+        <img class="toogle sun" src="./assets/sun.svg" alt="Toogle theme button" onclick="selectStyle()">
+        <img class="toogle moon" src="./assets/moon.svg" alt="Toogle theme button" onclick="selectStyle()">
+        <img class="toogle rocket" src="./assets/rocket.svg" alt="Toogle theme button" onclick="selectStyle()">
+      </div>
     </header>
 
     <main class="container">
@@ -123,6 +128,7 @@
     <script src="https://unpkg.com/feather-icons"></script>
 
     <script src="./scripts.js"></script>
+    <script src="./theme.js"></script>
 
     <script>
       feather.replace()
