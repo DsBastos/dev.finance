@@ -53,7 +53,7 @@ Project developed in the Discover marathon of Rocketseat. Dev.finance is a finan
 
  
 <pd>
-  you can view the project layout through <a href="https://www.figma.com/file/7Vu9DzUaCZIV4nibzkjgB4/dev.finance%24-Maratona-Discover" alt="this link"> this link</a>. <a href="https://figma.com/" alt="this link">Figma</a> account is required to access it.
+  you can view the original project layout through <a href="https://www.figma.com/file/7Vu9DzUaCZIV4nibzkjgB4/dev.finance%24-Maratona-Discover" alt="this link"> this link</a>. <a href="https://figma.com/" alt="this link">Figma</a> account is required to access it.
 </p>
 
 ---
