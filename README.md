@@ -25,7 +25,7 @@
 
 
 <h4 align="center"> 
-	 Status: Finished
+	 Status: In progress
 </h4>
 
 <p align="center">
