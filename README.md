@@ -38,7 +38,7 @@
 </p>
 
 <h1 align="center">
-    <img alt="dev.finance" title="dev.finance" src="assets/devfinances.png" />
+    <img alt="dev.finance" title="dev.finance" src="assets/devfinance.png" />
 </h1>
 
 ## 💻 About
